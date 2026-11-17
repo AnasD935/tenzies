@@ -1,30 +1,70 @@
-import { useState, useEffect } from 'react'
-import Buttons from './comps/Buttons.jsx'
-import './App.css'
+import { useState } from "react"
+import Die from "./comps/Die"
+import { nanoid } from "nanoid"
 
-function App() {
+export default function App() {
+    
+    const [dice, setDice] = useState(generateAllNewDice())
 
-  let [numbers, setNumbers] = useState(Array(12).fill(null))
+    function generateAllNewDice() {
+        return new Array(10)
+            .fill(0)
+            .map(() => ({
+                value: Math.ceil(Math.random() * 6),
+                isHeld: false,
+                id: nanoid()
+            }))
+    }
 
-  useEffect(() => {
-    generateAllNewDice()
-  }, [])
+    function rollDice() {
+      setDice(prev => prev.map(die => {
+        if (die.isHeld) {
+            return {
+              ...die
+            }
+          } else {
+            return {
+              ...die,
+              value: Math.ceil(Math.random() * 6)
+            }
+          }
+      }))
+    }
 
-  function generateAllNewDice() {
-    setNumbers(prev => 
-      prev.map(() => Math.floor(Math.random() * 6) + 1)
+    function holdDice(id) {
+        setDice(prevDice => prevDice.map(die => {
+          if (die.id === id) {
+            return {
+              ...die,
+              isHeld: !die.isHeld
+            }
+          } else {
+            return die
+          }
+        }))
+    }
+
+    const diceElements = dice.map(
+      dieObj => 
+      <Die 
+        key={dieObj.id} 
+        value={dieObj.value} 
+        isHeld={dieObj.isHeld} 
+        holdDice={holdDice} 
+        id={dieObj.id}
+      />
     )
-  }
 
-  return (
-      <main className="main-container" onLoad={generateAllNewDice}>
-        <Buttons numbers={numbers} />
-        <br/><br/>
-        <button className="main-button" onClick={generateAllNewDice}>
-          Roll
-        </button>
-      </main>
-  )
+    function gameWin(){
+      
+    }
+
+    return (
+        <main>
+            <div className="dice-container">
+                {diceElements}
+            </div>
+            <button className="roll-dice" onClick={rollDice}>Roll</button>
+        </main>
+    )
 }
-
-export default App
