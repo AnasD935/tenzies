@@ -32,7 +32,7 @@ main {
     background-color: #F5F5F5;
     width: 400px;
     height: 100%;
-    border-radius: 5px;
+    border-radius: 8px;
     padding-inline: 35px; 
     display: flex;
     flex-direction: column;
@@ -70,6 +70,7 @@ button.roll-dice {
     height: 50px;
     min-width: 100px;
     border: none;
+    font-weight: 600;
     border-radius: 6px;
     background-color: #5035FF;
     color: white;
